@@ -1,0 +1,65 @@
+name: Django project deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_USER: ${{ secrets.DB_USER }}
+      POSTGRES_PASS: ${{ secrets.DB_PASSWORD }}
+      POSTGRES_HOST: ${{ secrets.DB_HOST }}
+      POSTGRES_PORT: ${{ secrets.DB_PORT }}
+      POSTGRES_DB: ${{ secrets.DB_NAME }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+    services:
+      postgres_service:
+        image: postgres:16
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASS }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        ports:
+          - 5432:5432
+        options:
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Check changes in repo
+        uses: actions/checkout@v3
+
+      - name: Python installation
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.12
+      - name: Install requirements
+        run: pip install -r requirements.txt
+
+      - name: Code linting
+        run: flake8 main
+
+      - name: Tests
+        run: python manage.py test
+        env:
+          SECRET_KEY: ${{ env.SECRET_KEY }}
+          DEBUG: "0"
+          ALLOWED_HOSTS: ${{ env.ALLOWED_HOSTS }}
+          DB_NAME: ${{ env.POSTGRES_DB }}
+          DB_USER: ${{ env.POSTGRES_USER }}
+          DB_PASSWORD: ${{ env.POSTGRES_PASS }}
+          DB_HOST: ${{ env.POSTGRES_HOST }}
+          DB_PORT: ${{ env.POSTGRES_PORT }}
+
+#      - name: Deploy
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.USERNAME }}
+#          password: ${{ secrets.PASSWORD }}
+#          script:
+#            -
