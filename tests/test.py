@@ -1,2 +1,2 @@
 
-assert True == True
+assert True is True
