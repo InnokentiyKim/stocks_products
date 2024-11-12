@@ -42,7 +42,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Code linting
-        run: flake8 main
+        run: flake8 stocks_products
 
       - name: Test using pytest
         run: pytest
