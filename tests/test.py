@@ -1,2 +1,0 @@
-
-assert True is True
