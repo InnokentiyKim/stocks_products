@@ -68,6 +68,7 @@ jobs:
           script: |
             su user
             cd ~/project
+            ls - la
             git pull
             sudo systemctl restart gunicorn
             
