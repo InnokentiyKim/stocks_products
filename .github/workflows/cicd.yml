@@ -66,8 +66,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            su user
-            cd ~/project
+            sudo su user
+            cd /home/user/project/
             ls - la
             git pull
             sudo systemctl restart gunicorn
