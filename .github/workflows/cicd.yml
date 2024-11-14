@@ -55,13 +55,15 @@ jobs:
           DB_PASSWORD: ${{ env.POSTGRES_PASS }}
           DB_HOST: ${{ env.POSTGRES_HOST }}
           DB_PORT: ${{ env.POSTGRES_PORT }}
-
-
-#      - name: Deploy
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.HOST }}
-#          username: ${{ secrets.USERNAME }}
-#          password: ${{ secrets.PASSWORD }}
-#          script:
-#            -
+  deploy:
+    runs-on: ubuntu-latest
+    needs: tests
+    steps:
+      - name: deploy process
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            ls -la
