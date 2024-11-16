@@ -71,5 +71,5 @@ jobs:
             source env/bin/activate
             git pull
             systemctl restart gunicorn
-            echo gunicorn restarted
+            systemctl status gunicorn
             
