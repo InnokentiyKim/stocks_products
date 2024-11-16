@@ -69,6 +69,8 @@ jobs:
             sudo su user
             git config --global --add safe.directory /home/user/project
             cd /home/user/project/
+            ls -la
             git pull
             systemctl restart gunicorn
+            echo gunicorn restarted
             
