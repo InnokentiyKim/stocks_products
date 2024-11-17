@@ -68,7 +68,6 @@ jobs:
           script: |
             sudo su user
             cd /home/user/project/
-            source env/bin/activate
             git pull
             systemctl restart gunicorn
             systemctl status gunicorn
